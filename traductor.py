@@ -11,7 +11,7 @@ def translate_to_python(intermediate_code):
             python_code += f"    return {instruction[1]}\n"
         elif instruction[0] == 'ENDFUNCTION':
             python_code += "\n"
-    return python_code
+    return "\n".join(intermediate_code)
 
 # Example usage
 python_code = translate_to_python(intermediate_code)

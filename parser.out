@@ -1,10 +1,5 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    DIVIDE
-    TIMES
-
 Grammar
 
 Rule 0     S' -> program
@@ -19,38 +14,40 @@ Rule 8     return_statement -> RETURN expression SEMICOLON
 Rule 9     expression -> expression PLUS term
 Rule 10    expression -> expression MINUS term
 Rule 11    expression -> term
-Rule 12    term -> factor
-Rule 13    factor -> NUMBER
-Rule 14    factor -> ID
+Rule 12    term -> term TIMES factor
+Rule 13    term -> term DIVIDE factor
+Rule 14    term -> factor
+Rule 15    factor -> NUMBER
+Rule 16    factor -> ID
 
 Terminals, with rules where they appear
 
-DIVIDE               : 
+DIVIDE               : 13
 EQUAL                : 7
-ID                   : 2 7 14
+ID                   : 2 7 16
 INT                  : 2 7
 LBRACE               : 2
 LPAREN               : 2
 MINUS                : 10
-NUMBER               : 13
+NUMBER               : 15
 PLUS                 : 9
 RBRACE               : 2
 RETURN               : 8
 RPAREN               : 2
 SEMICOLON            : 7 8
-TIMES                : 
+TIMES                : 12
 error                : 
 
 Nonterminals, with rules where they appear
 
 expression           : 7 8 9 10
-factor               : 12
+factor               : 12 13 14
 function             : 1
 program              : 0
 return_statement     : 6
 statement            : 3 4
 statement_list       : 2 3
-term                 : 9 10 11
+term                 : 9 10 11 12 13
 var_declaration      : 5
 
 Parsing method: LALR
@@ -182,9 +179,11 @@ state 13
     (9) expression -> . expression PLUS term
     (10) expression -> . expression MINUS term
     (11) expression -> . term
-    (12) term -> . factor
-    (13) factor -> . NUMBER
-    (14) factor -> . ID
+    (12) term -> . term TIMES factor
+    (13) term -> . term DIVIDE factor
+    (14) term -> . factor
+    (15) factor -> . NUMBER
+    (16) factor -> . ID
 
     NUMBER          shift and go to state 20
     ID              shift and go to state 21
@@ -230,37 +229,47 @@ state 17
 state 18
 
     (11) expression -> term .
+    (12) term -> term . TIMES factor
+    (13) term -> term . DIVIDE factor
 
     SEMICOLON       reduce using rule 11 (expression -> term .)
     PLUS            reduce using rule 11 (expression -> term .)
     MINUS           reduce using rule 11 (expression -> term .)
+    TIMES           shift and go to state 26
+    DIVIDE          shift and go to state 27
 
 
 state 19
 
-    (12) term -> factor .
+    (14) term -> factor .
 
-    SEMICOLON       reduce using rule 12 (term -> factor .)
-    PLUS            reduce using rule 12 (term -> factor .)
-    MINUS           reduce using rule 12 (term -> factor .)
+    TIMES           reduce using rule 14 (term -> factor .)
+    DIVIDE          reduce using rule 14 (term -> factor .)
+    SEMICOLON       reduce using rule 14 (term -> factor .)
+    PLUS            reduce using rule 14 (term -> factor .)
+    MINUS           reduce using rule 14 (term -> factor .)
 
 
 state 20
 
-    (13) factor -> NUMBER .
+    (15) factor -> NUMBER .
 
-    SEMICOLON       reduce using rule 13 (factor -> NUMBER .)
-    PLUS            reduce using rule 13 (factor -> NUMBER .)
-    MINUS           reduce using rule 13 (factor -> NUMBER .)
+    TIMES           reduce using rule 15 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 15 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 15 (factor -> NUMBER .)
+    PLUS            reduce using rule 15 (factor -> NUMBER .)
+    MINUS           reduce using rule 15 (factor -> NUMBER .)
 
 
 state 21
 
-    (14) factor -> ID .
+    (16) factor -> ID .
 
-    SEMICOLON       reduce using rule 14 (factor -> ID .)
-    PLUS            reduce using rule 14 (factor -> ID .)
-    MINUS           reduce using rule 14 (factor -> ID .)
+    TIMES           reduce using rule 16 (factor -> ID .)
+    DIVIDE          reduce using rule 16 (factor -> ID .)
+    SEMICOLON       reduce using rule 16 (factor -> ID .)
+    PLUS            reduce using rule 16 (factor -> ID .)
+    MINUS           reduce using rule 16 (factor -> ID .)
 
 
 state 22
@@ -269,14 +278,16 @@ state 22
     (9) expression -> . expression PLUS term
     (10) expression -> . expression MINUS term
     (11) expression -> . term
-    (12) term -> . factor
-    (13) factor -> . NUMBER
-    (14) factor -> . ID
+    (12) term -> . term TIMES factor
+    (13) term -> . term DIVIDE factor
+    (14) term -> . factor
+    (15) factor -> . NUMBER
+    (16) factor -> . ID
 
     NUMBER          shift and go to state 20
     ID              shift and go to state 21
 
-    expression                     shift and go to state 26
+    expression                     shift and go to state 28
     term                           shift and go to state 18
     factor                         shift and go to state 19
 
@@ -292,59 +303,115 @@ state 23
 state 24
 
     (9) expression -> expression PLUS . term
-    (12) term -> . factor
-    (13) factor -> . NUMBER
-    (14) factor -> . ID
+    (12) term -> . term TIMES factor
+    (13) term -> . term DIVIDE factor
+    (14) term -> . factor
+    (15) factor -> . NUMBER
+    (16) factor -> . ID
 
     NUMBER          shift and go to state 20
     ID              shift and go to state 21
 
-    term                           shift and go to state 27
+    term                           shift and go to state 29
     factor                         shift and go to state 19
 
 state 25
 
     (10) expression -> expression MINUS . term
-    (12) term -> . factor
-    (13) factor -> . NUMBER
-    (14) factor -> . ID
+    (12) term -> . term TIMES factor
+    (13) term -> . term DIVIDE factor
+    (14) term -> . factor
+    (15) factor -> . NUMBER
+    (16) factor -> . ID
 
     NUMBER          shift and go to state 20
     ID              shift and go to state 21
 
-    term                           shift and go to state 28
+    term                           shift and go to state 30
     factor                         shift and go to state 19
 
 state 26
+
+    (12) term -> term TIMES . factor
+    (15) factor -> . NUMBER
+    (16) factor -> . ID
+
+    NUMBER          shift and go to state 20
+    ID              shift and go to state 21
+
+    factor                         shift and go to state 31
+
+state 27
+
+    (13) term -> term DIVIDE . factor
+    (15) factor -> . NUMBER
+    (16) factor -> . ID
+
+    NUMBER          shift and go to state 20
+    ID              shift and go to state 21
+
+    factor                         shift and go to state 32
+
+state 28
 
     (7) var_declaration -> INT ID EQUAL expression . SEMICOLON
     (9) expression -> expression . PLUS term
     (10) expression -> expression . MINUS term
 
-    SEMICOLON       shift and go to state 29
+    SEMICOLON       shift and go to state 33
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
 
 
-state 27
+state 29
 
     (9) expression -> expression PLUS term .
+    (12) term -> term . TIMES factor
+    (13) term -> term . DIVIDE factor
 
     SEMICOLON       reduce using rule 9 (expression -> expression PLUS term .)
     PLUS            reduce using rule 9 (expression -> expression PLUS term .)
     MINUS           reduce using rule 9 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 26
+    DIVIDE          shift and go to state 27
 
 
-state 28
+state 30
 
     (10) expression -> expression MINUS term .
+    (12) term -> term . TIMES factor
+    (13) term -> term . DIVIDE factor
 
     SEMICOLON       reduce using rule 10 (expression -> expression MINUS term .)
     PLUS            reduce using rule 10 (expression -> expression MINUS term .)
     MINUS           reduce using rule 10 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 26
+    DIVIDE          shift and go to state 27
 
 
-state 29
+state 31
+
+    (12) term -> term TIMES factor .
+
+    TIMES           reduce using rule 12 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 12 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 12 (term -> term TIMES factor .)
+    PLUS            reduce using rule 12 (term -> term TIMES factor .)
+    MINUS           reduce using rule 12 (term -> term TIMES factor .)
+
+
+state 32
+
+    (13) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 13 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 13 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 13 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 13 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 13 (term -> term DIVIDE factor .)
+
+
+state 33
 
     (7) var_declaration -> INT ID EQUAL expression SEMICOLON .
 

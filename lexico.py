@@ -1,24 +1,11 @@
 import ply.lex as lex
 
-# List of token names
 tokens = (
-    'NUMBER',
-    'ID',
-    'PLUS',
-    'MINUS',
-    'TIMES',
-    'DIVIDE',
-    'LPAREN',
-    'RPAREN',
-    'SEMICOLON',
-    'EQUAL',
-    'LBRACE',
-    'RBRACE',
-    'INT',
-    'RETURN'
+    'NUMBER', 'ID', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
+    'LPAREN', 'RPAREN', 'SEMICOLON', 'EQUAL', 'LBRACE',
+    'RBRACE', 'INT', 'RETURN'
 )
 
-# Regular expression rules for simple tokens
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
@@ -30,7 +17,6 @@ t_EQUAL = r'='
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
 
-# Keywords
 reserved = {
     'int': 'INT',
     'return': 'RETURN'
@@ -46,13 +32,14 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
-# Ignored characters (spaces and tabs)
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
 t_ignore = ' \t'
 
-# Error handling rule
 def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
 
-# Build the lexer
 lexer = lex.lex()

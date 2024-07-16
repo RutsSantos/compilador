@@ -1,10 +1,9 @@
 import ply.yacc as yacc
 from lexico import tokens  # Asegúrate de que 'yourlexer' se refiere al archivo que contiene tu lexer
 
-# Parsing rules
 def p_program(p):
     'program : function'
-    p[0] = p[1]
+    p[0] = ('program', p[1])
 
 def p_function(p):
     'function : INT ID LPAREN RPAREN LBRACE statement_list RBRACE'
@@ -40,6 +39,11 @@ def p_expression_term(p):
     'expression : term'
     p[0] = p[1]
 
+def p_term_binop(p):
+    '''term : term TIMES factor
+            | term DIVIDE factor'''
+    p[0] = ('binop', p[2], p[1], p[3])
+
 def p_term_factor(p):
     'term : factor'
     p[0] = p[1]
@@ -58,5 +62,4 @@ def p_error(p):
     else:
         print("Syntax error at EOF")
 
-# Build the parser
 parser = yacc.yacc()
