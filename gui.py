@@ -57,13 +57,13 @@ root.title("Compilador de C++ a Python")
 open_button = tk.Button(root, text="Abrir archivo", command=open_file)
 open_button.pack()
 
-input_text = tk.Text(root, height=40, width=150)
+input_text = tk.Text(root, height=30, width=150)
 input_text.pack()
 
 compile_button = tk.Button(root, text="Compilar", command=compile_code)
 compile_button.pack()
 
-output_text = tk.Text(root, height=40, width=150)
+output_text = tk.Text(root, height=50, width=150)
 output_text.pack()
 
 root.mainloop()
