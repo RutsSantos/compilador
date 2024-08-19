@@ -36,19 +36,31 @@ def compile_code():
     output_text.delete(1.0, tk.END)
     output_text.insert(tk.END, "Tokens:\n" + str(tokens) + "\n\n")
     output_text.insert(tk.END, "AST:\n" + str(ast) + "\n\n")
-    output_text.insert(tk.END, "Intermediate Code:\n" + str(intermediate_code) + "\n\n")
-    output_text.insert(tk.END, "Python Code:\n" + python_code + "\n\n")
+    output_text.insert(tk.END, "Código Intermedio:\n" + str(intermediate_code) + "\n\n")
+    output_text.insert(tk.END, "Código Python:\n" + python_code + "\n\n")
+
+    # Ejecutar el código Python y capturar el resultado
+    try:
+        # Crear un entorno local para capturar la salida del código
+        local_env = {}
+        exec(python_code, {}, local_env)
+        
+        # Capturar el resultado de la función main() si existe
+        result = local_env.get('main', lambda: 'No main function')()
+        output_text.insert(tk.END, f"Resultado de ejecución:\n{result}\n")
+    except Exception as e:
+        output_text.insert(tk.END, f"Error de ejecución:\n{str(e)}\n")
 
 root = tk.Tk()
-root.title("C++ to Python Compiler")
+root.title("Compilador de C++ a Python")
 
-open_button = tk.Button(root, text="Open File", command=open_file)
+open_button = tk.Button(root, text="Abrir archivo", command=open_file)
 open_button.pack()
 
-input_text = tk.Text(root, height=40, width=80)
+input_text = tk.Text(root, height=40, width=150)
 input_text.pack()
 
-compile_button = tk.Button(root, text="Compile", command=compile_code)
+compile_button = tk.Button(root, text="Compilar", command=compile_code)
 compile_button.pack()
 
 output_text = tk.Text(root, height=40, width=150)
